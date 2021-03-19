@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const UsersStyles = styled.div`
   display: flex;
   justify-content: center;
+  text-align: center;
   padding-top: 50px;
 
   th {
@@ -18,20 +19,10 @@ export const UsersStyles = styled.div`
   tr {
     min-width: auto;
   }
-  .number {
+  .name {
     border-top-left-radius: 8px;
   }
   .sex {
     border-top-right-radius: 8px;
-  }
-  .id,
-  .gender,
-  .clicks,
-  .views {
-    /* flex-grow: 110;
-     */
-  }
-  .email {
-    /* flex-grow: 50; */
   }
 `;

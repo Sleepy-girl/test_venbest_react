@@ -18,23 +18,18 @@ function Users() {
       <table>
         <tbody>
           <tr className="tableHeader">
-            <th className="number">number</th>
-            <th>First name</th>
+            <th className="name">First name</th>
             <th>Last name</th>
             <th>Age</th>
             <th className="sex">sex</th>
           </tr>
           {!!userData &&
             userData.map((user) => (
-              <tr key={userData.age}>
-                <td>number</td>
-                <td>{userData.name}</td>
-                <td>
-                  {userData.lastname}
-                  {console.log(`userData.lastname`, userData.lastname)}
-                </td>
-                <td>{userData.age}</td>
-                <td>{userData.sex}</td>
+              <tr key={user.age}>
+                <td>{user.name}</td>
+                <td>{user.lastname}</td>
+                <td>{user.age}</td>
+                <td>{user.sex}</td>
               </tr>
             ))}
         </tbody>
