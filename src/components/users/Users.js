@@ -7,13 +7,7 @@ function Users() {
   const [userData, setUserData] = useState([]);
   const [checked, setChecked] = useState({ m: true, f: true });
 
-  const changeChecked = () => {
-    // userData.map((user) => user.sex === checked[user.sex]).split();
-    console.log(
-      `changeChecked`,
-      userData.map((user) => checked[user.sex])
-    );
-  };
+  const changeChecked = () => {};
 
   const onHandleCheck = (e) => {
     const { name } = e.target;
