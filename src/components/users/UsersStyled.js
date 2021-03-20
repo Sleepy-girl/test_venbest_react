@@ -15,6 +15,10 @@ export const UsersStyles = styled.div`
     padding: 14px 24px;
     margin-right: 1px;
   }
+  td {
+    line-height: 40px;
+    border: dotted 1px cornflowerblue;
+  }
   th,
   tr {
     min-width: auto;
@@ -37,7 +41,7 @@ export const UsersStyles = styled.div`
     height: 12px;
     cursor: pointer;
   }
-  .firstOfTypeSex {
+  label:first-of-type {
     margin-right: 20px;
   }
 `;

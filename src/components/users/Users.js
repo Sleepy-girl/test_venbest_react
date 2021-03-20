@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { arrayHeader } from "./dataTable";
 import { UsersStyles } from "./UsersStyled";
 
 function Users() {
   const [userData, setUserData] = useState([]);
-  const [checked, setChecked] = useState({ m: true, f: true });
-
-  const changeChecked = () => {};
+  const [checked, setChecked] = useState({ m: false, f: false });
+  const [isShow, setIsShow] = useState(true);
 
   const onHandleCheck = (e) => {
+    setIsShow(false);
     const { name } = e.target;
+    // console.log(`e.target.checked`, e.target.checked);
 
     setChecked((prevChecked) => {
       return { ...prevChecked, [name]: !prevChecked.name };
@@ -39,7 +40,7 @@ function Users() {
 
   useEffect(() => {
     !userData.length && getUsers();
-  });
+  }, []);
 
   console.log(`userData`, userData);
 
@@ -60,12 +61,11 @@ function Users() {
                   />
                 ) : (
                   arrHeader.checkboxes.map((checkbox) => (
-                    <label className="firstOfTypeSex" key={checkbox.name}>
+                    <label key={checkbox.name}>
                       {checkbox.lable}
                       <input
                         type={arrHeader.type}
                         name={checkbox.name}
-                        checked={changeChecked()}
                         onChange={onHandleCheck}
                       />
                     </label>
@@ -74,18 +74,17 @@ function Users() {
               </th>
             ))}
           </tr>
-          {userData.length &&
-            userData.map(
-              (user) =>
-                user.checked && (
-                  <tr key={user.lastname}>
-                    <td>{user.name}</td>
-                    <td>{user.lastname}</td>
-                    <td>{user.age}</td>
-                    <td>{user.sex}</td>
-                  </tr>
-                )
-            )}
+          {userData.map(
+            (user) =>
+              (isShow || user.checked) && (
+                <tr key={user.lastname}>
+                  <td>{user.name}</td>
+                  <td>{user.lastname}</td>
+                  <td>{user.age}</td>
+                  <td>{user.sex}</td>
+                </tr>
+              )
+          )}
         </tbody>
       </table>
     </UsersStyles>
