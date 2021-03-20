@@ -1,24 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { UsersStyles } from "./UsersStyled";
 
 const arrayHeader = [
-  { title: "Имя", placeholder: "Введите имя" },
-  { title: "Фамилия", placeholder: "Введите фамилию" },
-  { title: "Возраст", placeholder: "Введите возраст" },
-  // { title: "Пол", placeholder: "Введите имя" },
+  { title: "Имя", type: "text", name: "name", placeholder: "Введите имя" },
+  {
+    title: "Фамилия",
+    type: "text",
+    name: "lastname",
+    placeholder: "Введите фамилию",
+  },
+  {
+    title: "Возраст",
+    type: "number",
+    name: "age",
+    placeholder: "Введите возраст",
+  },
+  {
+    title: "Пол",
+    type: "checkbox",
+    checkboxes: [
+      { name: "m", lable: "мужской" },
+      { name: "f", lable: "женский" },
+    ],
+  },
 ];
 
 function Users() {
   const [userData, setUserData] = useState([]);
+  const [checked, setChecked] = useState({ male: true, female: true });
 
-  const onHandleCheck = () => {};
+  const onHandleCheck = (e) => {
+    // setChecked(
+    //   (prev) =>
+    //     (e.target.name === "m" && { ...prev, male: !prev.male }) ||
+    //     (e.target.name === "f" && { ...prev, female: !prev.female })
+    // );
 
-  useEffect(() => {
+    setUserData((prev) => [
+      ...prev.map((user) =>
+        e.target.name === user.sex
+          ? { ...user, checked: !user.checked }
+          : { ...user }
+      ),
+    ]);
+  };
+
+  const getUsers = () => {
     axios
       .get("https://venbest-test.herokuapp.com/")
-      .then((res) => setUserData(res.data));
+      .then((res) =>
+        setUserData([
+          ...res.data.map((user) => ({
+            ...user,
+            checked: user.sex === "m" ? checked.male : checked.female,
+          })),
+        ])
+      )
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    !userData.length && getUsers();
+    onHandleCheck();
   }, []);
+
+  console.log(`userData`, userData);
 
   return (
     <UsersStyles>
@@ -29,41 +76,42 @@ function Users() {
               <th key={arrHeader.title}>
                 {arrHeader.title}
                 <br />
-                <input placeholder={arrHeader.placeholder} />
+                {arrHeader.title !== "Пол" ? (
+                  <input
+                    type={arrHeader.type}
+                    name={arrHeader.name}
+                    placeholder={arrHeader.placeholder}
+                  />
+                ) : (
+                  arrHeader.checkboxes.map((checkbox) => (
+                    <label className="firstOfTypeSex" key={checkbox.name}>
+                      {checkbox.lable}
+                      <input
+                        type={arrHeader.type}
+                        name={checkbox.name}
+                        checked={userData.find((user) =>
+                          user.sex === "m" ? checked.male : checked.female
+                        )}
+                        onChange={onHandleCheck}
+                      />
+                    </label>
+                  ))
+                )}
               </th>
             ))}
-            <th>
-              Пол
-              <br />
-              <label className="firstOfTypeSex">
-                мужчины
-                <input
-                  type="checkbox"
-                  name="sex"
-                  checked={""}
-                  onChange={onHandleCheck}
-                />
-              </label>
-              <label>
-                женщины
-                <input
-                  type="checkbox"
-                  name="sex"
-                  checked={""}
-                  onChange={onHandleCheck}
-                />
-              </label>
-            </th>
           </tr>
-          {userData &&
-            userData.map((user) => (
-              <tr key={user.lastname}>
-                <td>{user.name}</td>
-                <td>{user.lastname}</td>
-                <td>{user.age}</td>
-                <td>{user.sex}</td>
-              </tr>
-            ))}
+          {userData.length &&
+            userData.map(
+              (user) =>
+                user.checked && (
+                  <tr key={user.lastname}>
+                    <td>{user.name}</td>
+                    <td>{user.lastname}</td>
+                    <td>{user.age}</td>
+                    <td>{user.sex}</td>
+                  </tr>
+                )
+            )}
         </tbody>
       </table>
     </UsersStyles>
