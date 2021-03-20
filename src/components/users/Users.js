@@ -1,47 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { arrayHeader } from "./dataTable";
 import { UsersStyles } from "./UsersStyled";
-
-const arrayHeader = [
-  { title: "Имя", type: "text", name: "name", placeholder: "Введите имя" },
-  {
-    title: "Фамилия",
-    type: "text",
-    name: "lastname",
-    placeholder: "Введите фамилию",
-  },
-  {
-    title: "Возраст",
-    type: "number",
-    name: "age",
-    placeholder: "Введите возраст",
-  },
-  {
-    title: "Пол",
-    type: "checkbox",
-    checkboxes: [
-      { name: "m", lable: "мужской" },
-      { name: "f", lable: "женский" },
-    ],
-  },
-];
 
 function Users() {
   const [userData, setUserData] = useState([]);
-  const [checked, setChecked] = useState({ male: true, female: true });
+  const [checked, setChecked] = useState({ m: true, f: true });
+
+  const changeChecked = () => {
+    // userData.map((user) => user.sex === checked[user.sex]).split();
+    console.log(
+      `changeChecked`,
+      userData.map((user) => checked[user.sex])
+    );
+  };
 
   const onHandleCheck = (e) => {
-    // setChecked(
-    //   (prev) =>
-    //     (e.target.name === "m" && { ...prev, male: !prev.male }) ||
-    //     (e.target.name === "f" && { ...prev, female: !prev.female })
-    // );
+    const { name } = e.target;
 
-    setUserData((prev) => [
-      ...prev.map((user) =>
-        e.target.name === user.sex
-          ? { ...user, checked: !user.checked }
-          : { ...user }
+    setChecked((prevChecked) => {
+      return { ...prevChecked, [name]: !prevChecked.name };
+    });
+
+    setUserData((prevData) => [
+      ...prevData.map((user) =>
+        name === user.sex ? { ...user, checked: !user.checked } : { ...user }
       ),
     ]);
   };
@@ -53,7 +36,7 @@ function Users() {
         setUserData([
           ...res.data.map((user) => ({
             ...user,
-            checked: user.sex === "m" ? checked.male : checked.female,
+            checked: checked[user.sex],
           })),
         ])
       )
@@ -62,8 +45,7 @@ function Users() {
 
   useEffect(() => {
     !userData.length && getUsers();
-    onHandleCheck();
-  }, []);
+  });
 
   console.log(`userData`, userData);
 
@@ -89,9 +71,7 @@ function Users() {
                       <input
                         type={arrHeader.type}
                         name={checkbox.name}
-                        checked={userData.find((user) =>
-                          user.sex === "m" ? checked.male : checked.female
-                        )}
+                        checked={changeChecked()}
                         onChange={onHandleCheck}
                       />
                     </label>
