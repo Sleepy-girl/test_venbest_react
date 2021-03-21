@@ -50,14 +50,16 @@ function Users() {
   useEffect(() => {
     if (search.name.length > 0) {
       setUserData(
-        userData.filter((user) => user.name.toLowerCase().includes(search.name))
+        userData.filter((user) =>
+          user.name.toLowerCase().includes(search.name.toLowerCase())
+        )
       );
     }
 
     if (search.lastname.length > 0) {
       setUserData(
         userData.filter((user) =>
-          user.lastname.toLowerCase().includes(search.lastname)
+          user.lastname.toLowerCase().includes(search.lastname.toLowerCase())
         )
       );
     }
