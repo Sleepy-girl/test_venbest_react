@@ -33,7 +33,7 @@ function Users() {
     ]);
   };
 
-  function getUsers() {
+  const getUsers = () => {
     axios
       .get("https://venbest-test.herokuapp.com/")
       .then((res) =>
@@ -45,7 +45,7 @@ function Users() {
         ])
       )
       .catch((err) => console.log(err));
-  }
+  };
 
   useEffect(() => {
     if (search.name.length > 0) {
