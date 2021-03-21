@@ -12,19 +12,13 @@ function Users() {
   const [isShow, setIsShow] = useState(true);
   const [search, setSearch] = useState(initialSearch);
 
-  // const onHandleChange = (e) => {
-  //   // const { name, value } = e.target;
-  //   setSearch((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  //   console.log(`value`, value);
-  //   console.log(`search`, search);
-
-  //   setUserData(
-  //     userData.filter((user) =>
-  //       user.name.toLowerCase().includes(search[name].toLowerCase())
-  //     )
-  //   );
-  //   console.log(`userData`, userData);
-  // };
+  const onHandleChange = (e) => {
+    const { name, value } = e.target;
+    setSearch((prev) => ({
+      ...prev,
+      [name]: name === "age" ? Number(value) : value,
+    }));
+  };
 
   const onHandleCheck = (e) => {
     setIsShow(false);
@@ -54,24 +48,31 @@ function Users() {
   }
 
   useEffect(() => {
+    if (search.name.length > 0) {
+      setUserData(
+        userData.filter((user) => user.name.toLowerCase().includes(search.name))
+      );
+    }
+
+    if (search.lastname.length > 0) {
+      setUserData(
+        userData.filter((user) =>
+          user.lastname.toLowerCase().includes(search.lastname)
+        )
+      );
+    }
+
+    if (search.age >= 18) {
+      setUserData(userData.filter((user) => user.age === search.age));
+    }
+
+    search.age === 0 && (search.age = "");
     Object.values(search).every((value) => value === "") && getUsers();
-    // Object.values(search).some((value) => value === "") &&
-    // setUserData(
-    //   userData.filter((user) => user.toLowerCase().includes(search))
-    // );
   }, [search]);
 
   useEffect(() => {
     !userData.length && getUsers();
   }, []);
-
-  // useEffect(() => {
-  //   const results = userData.filter((user) =>
-  //     user.toLowerCase().includes(search)
-  //   );
-  //   setUserData(results);
-  //   !userData.length && getUsers();
-  // }, [search, userData]);
 
   return (
     <UsersStyles>
@@ -88,23 +89,7 @@ function Users() {
                     name={arrHeader.name}
                     value={search[arrHeader.name]}
                     placeholder={arrHeader.placeholder}
-                    onChange={(e) => {
-                      const { name, value } = e.target;
-                      setSearch((prev) => ({
-                        ...prev,
-                        [name]: name === "age" ? Number(value) : value,
-                      }));
-                      // setUserData(
-                      //   userData.filter((user) =>
-                      //     // user[name] !== "age"
-                      //     //   ? user[name]
-                      //     //       .toLowerCase()
-                      //     //       .includes(search[name].toLowerCase())
-                      //     //   : user[name] === value
-                      //     console.log(search)
-                      //   )
-                      // );
-                    }}
+                    onChange={onHandleChange}
                   />
                 ) : (
                   arrHeader.checkboxes.map((checkbox) => (
@@ -120,8 +105,6 @@ function Users() {
                 )}
               </th>
             ))}
-            {/* {console.log(`search`, search)}
-            {console.log(`userData`, userData)} */}
           </tr>
           {userData.map(
             (user) =>
